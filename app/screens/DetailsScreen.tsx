@@ -1,35 +1,35 @@
+import { useLocalSearchParams, useRouter } from 'expo-router';
 import { Image, ScrollView, Text, TouchableOpacity } from 'react-native';
 
-type Props = {
-    pokemon: any;
-    onClose: () => void;
-};
+export default function DetailsScreen() {
+    const router = useRouter();
+    const { name, image, types, abilities } = useLocalSearchParams<{
+        name: string;
+        image: string;
+        types: string;
+        abilities: string;
+    }>();
 
-export default function DetailsScreen({ pokemon, onClose }: Props) {
     return (
-        <ScrollView>
-
-            <TouchableOpacity onPress={onClose}>
+        <ScrollView contentContainerStyle={{ padding: 20 }}>
+            <TouchableOpacity onPress={() => router.back()}>
                 <Text>⬅ Retour</Text>
             </TouchableOpacity>
 
-            <Text>{pokemon.name}</Text>
+            <Text style={{ fontSize: 22, fontWeight: 'bold', marginVertical: 10 }}>{name}</Text>
 
-            <Image
-                source={{ uri: pokemon.image }}
-                style={{ width: 150, height: 150 }}
-            />
+            <Image source={{ uri: image }} style={{ width: 150, height: 150 }} />
 
-            <Text>Types :</Text>
-            {pokemon.types.map((type: string) => (
+            <Text style={{ marginTop: 10 }}>Types :</Text>
+            {types?.split(',').map((type) => (
                 <Text key={type}>- {type}</Text>
             ))}
 
-            <Text>Capacités :</Text>
-            {pokemon.abilities.map((ability: string) => (
+            <Text style={{ marginTop: 10 }}>Capacités :</Text>
+            {abilities?.split(',').map((ability) => (
                 <Text key={ability}>- {ability}</Text>
             ))}
-
         </ScrollView>
     );
 }
+
