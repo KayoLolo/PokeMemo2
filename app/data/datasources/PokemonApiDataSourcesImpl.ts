@@ -1,4 +1,4 @@
-import { API_CONFIG } from "@/app/config/apiConfig";
+import { API_CONFIG } from "@/app/core/config/apiConfig";
 import { PokemonApiDataSource } from "./PokemonApiDataSources";
 import { PokemonDto } from "../dtos/PokemonDto";
 

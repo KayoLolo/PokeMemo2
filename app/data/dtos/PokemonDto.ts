@@ -1,3 +1,4 @@
+import { PokemonAbilitiesDto } from "./PokemonAbilitiesDto";
 import { PokemonStatsDto } from "./PokemonStatsDto";
 import { PokemonTypesDto } from "./PokemonTypesDto";
 
@@ -18,4 +19,6 @@ export interface PokemonDto {
   types?: PokemonTypesDto[];
 
   stats?: PokemonStatsDto[];
+
+  abilities?: PokemonAbilitiesDto[];
 }

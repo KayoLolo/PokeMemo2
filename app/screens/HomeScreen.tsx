@@ -1,17 +1,52 @@
 import { useRouter } from "expo-router";
 import { Image, Text, TouchableOpacity, View } from "react-native";
-
-const examplePokemon = {
-  id: 1,
-  name: "Pikachu",
-  image:
-    "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/25.png",
-  types: ["Electric"],
-  abilities: ["Static", "Lightning Rod"],
-};
+import { usePokemonDetails } from "./presentation/hooks/usePokemonDetails";
 
 export default function HomeScreen() {
+  const { pokemon, loading, error } = usePokemonDetails(8);
   const router = useRouter();
+
+  if (loading) {
+    return (
+      <View
+        style={{
+          flex: 1,
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <Text>Chargement...</Text>
+      </View>
+    );
+  }
+
+  if (error) {
+    return (
+      <View
+        style={{
+          flex: 1,
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <Text>{error}</Text>
+      </View>
+    );
+  }
+
+  if (!pokemon) {
+    return (
+      <View
+        style={{
+          flex: 1,
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <Text>Aucun Pokémon trouvé</Text>
+      </View>
+    );
+  }
 
   return (
     <View
@@ -27,10 +62,10 @@ export default function HomeScreen() {
           router.push({
             pathname: "/details" as never,
             params: {
-              name: examplePokemon.name,
-              image: examplePokemon.image,
-              types: examplePokemon.types.join(","),
-              abilities: examplePokemon.abilities.join(","),
+              name: pokemon.name,
+              image: pokemon.imageUrl,
+              types: pokemon.types.join(","),
+              abilities: pokemon.abilities.join(","),
             },
           })
         }
@@ -48,11 +83,11 @@ export default function HomeScreen() {
         }}
       >
         <Image
-          source={{ uri: examplePokemon.image }}
+          source={{ uri: pokemon.imageUrl }}
           style={{ width: 150, height: 150, marginBottom: 15 }}
         />
         <Text style={{ fontSize: 18, fontWeight: "bold", marginBottom: 10 }}>
-          {examplePokemon.name}
+          {pokemon.name}
         </Text>
         <View
           style={{
@@ -62,7 +97,7 @@ export default function HomeScreen() {
             justifyContent: "center",
           }}
         >
-          {examplePokemon.types.map((type) => (
+          {pokemon.types.map((type: string) => (
             <Text
               key={type}
               style={{
