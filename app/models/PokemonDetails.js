@@ -1,6 +1,6 @@
 import { PokemonEvolutions } from "./PokemonEvolutions";
 
-export class PokemonDetail {
+export class PokemonDetails {
     constructor(data) {
         const id = data?.id ?? 0;
 
@@ -23,8 +23,8 @@ export class PokemonDetail {
         this.evolutions = [];
     }
 
-    async loadEvolutions() {
-        this.evolutions = await PokemonEvolutions(this.id);
-        return this;
-    }
+    // async loadEvolutions() {
+    //     this.evolutions = await PokemonEvolutions(this.id);
+    //     return this;
+    // }
 }
