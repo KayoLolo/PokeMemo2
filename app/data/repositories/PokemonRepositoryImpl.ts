@@ -1,6 +1,6 @@
 import { PokemonApiDataSource } from "@/app/data/datasources/PokemonApiDataSources";
 import { PokemonDetails } from "@/app/models/PokemonDetails";
-import { PokemonRepository } from "./PokemonRepository";
+import { PokemonRepository } from "@/app/domain/repositories/PokemonRepository";
 
 export class PokemonRepositoryImpl implements PokemonRepository {
   constructor(private apiDataSource: PokemonApiDataSource) {}

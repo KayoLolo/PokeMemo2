@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { pokemonRepository } from "../../../core/config/pokemon";
+import { pokemonRepository } from "@/app/core/config/pokemon";
 
 export function usePokemonCount() {
   const [count, setCount] = useState<number | null>(null);
