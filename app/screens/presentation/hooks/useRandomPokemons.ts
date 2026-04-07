@@ -15,14 +15,19 @@ export function useRandomPokemons() {
       try {
         setLoading(true);
         setError(null);
+        const saved = await getDisplayedPokemonIds();
 
-        const displayedIds = await getDisplayedPokemonIds();
-        const results = await getRandomPokemonIds();
-        const filtered = results.filter((id) => !displayedIds.includes(id));
-        await notePokemonAsDisplayed(filtered);
+        if (saved.length > 0) {
+          if (isMounted) {
+            setIds(saved);
+          }
+        } else {
+          const results = await getRandomPokemonIds();
+          await notePokemonAsDisplayed(results);
 
-        if (isMounted) {
-          setIds(filtered);
+          if (isMounted) {
+            setIds(results);
+          }
         }
       } catch (e) {
         if (isMounted) {
