@@ -1,27 +1,30 @@
 import { useEffect, useState } from "react";
-import { pokemonRepository } from "@/app/core/config/pokemon";
+import { getRandomPokemonIds } from "../getRandomPokemonIds";
+import { usePokemonList } from "./usePokemonList";
 
-export function usePokemonCount() {
-  const [count, setCount] = useState<number | null>(null);
+export function useRandomPokemons() {
+  const [ids, setIds] = useState<number[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     let isMounted = true;
 
-    async function loadCount() {
+    async function loadIds() {
       try {
         setLoading(true);
         setError(null);
 
-        const result = await pokemonRepository.getCount();
+        const results = await getRandomPokemonIds();
 
         if (isMounted) {
-          setCount(result);
+          setIds(results);
         }
       } catch (e) {
         if (isMounted) {
-          setError("Impossible to fetch Pokemon's count");
+          setError(
+            e instanceof Error ? e.message : "Impossible to fetch random ids",
+          );
         }
       } finally {
         if (isMounted) {
@@ -30,12 +33,12 @@ export function usePokemonCount() {
       }
     }
 
-    loadCount();
+    void loadIds();
 
     return () => {
       isMounted = false;
     };
   }, []);
 
-  return { count, loading, error };
+  return usePokemonList(ids);
 }

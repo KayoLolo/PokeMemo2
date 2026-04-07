@@ -8,6 +8,10 @@ export function usePokemonDetails(id: number) {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    if (!id) {
+      return;
+    }
+
     let isMounted = true;
 
     async function loadPokemon() {
