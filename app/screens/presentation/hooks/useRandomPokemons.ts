@@ -1,3 +1,4 @@
+import { getDisplayedPokemonIds, notePokemonAsDisplayed } from "@/app/core/utils/displayPokemons";
 import { useEffect, useState } from "react";
 import { getRandomPokemonIds } from "../getRandomPokemonIds";
 import { usePokemonList } from "./usePokemonList";
@@ -15,10 +16,13 @@ export function useRandomPokemons() {
         setLoading(true);
         setError(null);
 
+        const displayedIds = await getDisplayedPokemonIds();
         const results = await getRandomPokemonIds();
+        const filtered = results.filter((id) => !displayedIds.includes(id));
+        await notePokemonAsDisplayed(filtered);
 
         if (isMounted) {
-          setIds(results);
+          setIds(filtered);
         }
       } catch (e) {
         if (isMounted) {
