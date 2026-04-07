@@ -16,6 +16,5 @@ export async function getRandomPokemonIds(): Promise<number[]> {
       randomIds.push(randomId);
     }
   }
-  console.log("randomIds:", randomIds);
   return randomIds;
 }

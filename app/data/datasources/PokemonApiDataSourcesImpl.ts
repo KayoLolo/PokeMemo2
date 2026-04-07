@@ -11,7 +11,6 @@ export class PokemonApiDataSourceImpl implements PokemonApiDataSource {
     }
 
     const data: PokemonDto = await response.json();
-    console.log("pokemon details name impl:", data.name);
 
     return data;
   }
@@ -24,7 +23,6 @@ export class PokemonApiDataSourceImpl implements PokemonApiDataSource {
     }
 
     const data = await response.json();
-    console.log("data count impl:", data.count);
     return data.count;
   }
 }

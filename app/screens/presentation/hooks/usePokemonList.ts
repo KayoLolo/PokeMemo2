@@ -3,8 +3,6 @@ import { PokemonDetails } from "@/app/models/PokemonDetails";
 import { useEffect, useState } from "react";
 
 export function usePokemonList(ids: number[]) {
-  console.log("ids list", ids);
-
   const [pokemons, setPokemons] = useState<PokemonDetails[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
