@@ -1,3 +1,4 @@
+import { getDisplayedPokemonIds, notePokemonAsDisplayed } from "@/app/core/utils/displayPokemons";
 import { useEffect, useState } from "react";
 import { getRandomPokemonIds } from "../getRandomPokemonIds";
 import { usePokemonList } from "./usePokemonList";
@@ -14,11 +15,19 @@ export function useRandomPokemons() {
       try {
         setLoading(true);
         setError(null);
+        const saved = await getDisplayedPokemonIds();
 
-        const results = await getRandomPokemonIds();
+        if (saved.length > 0) {
+          if (isMounted) {
+            setIds(saved);
+          }
+        } else {
+          const results = await getRandomPokemonIds();
+          await notePokemonAsDisplayed(results);
 
-        if (isMounted) {
-          setIds(results);
+          if (isMounted) {
+            setIds(results);
+          }
         }
       } catch (e) {
         if (isMounted) {
