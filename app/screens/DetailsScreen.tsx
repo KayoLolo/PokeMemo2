@@ -1,5 +1,7 @@
 import { useLocalSearchParams, useRouter } from "expo-router";
+import { useEffect, useState } from "react";
 import {
+  ActivityIndicator,
   Image,
   ScrollView,
   StyleSheet,
@@ -8,6 +10,8 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { EvolutionEntry } from "@/app/data/datasources/PokemonApiDataSources";
+import { pokemonRepository } from "@/app/core/config/pokemon";
 
 const TYPE_COLORS: Record<string, string> = {
   fire: "#F08030",
@@ -50,8 +54,9 @@ const STAT_COLORS: Record<string, string> = {
 
 export default function DetailsScreen() {
   const router = useRouter();
-  const { name, image, types, abilities, height, weight, stats } =
+  const { id, name, image, types, abilities, height, weight, stats } =
     useLocalSearchParams<{
+      id: string;
       name: string;
       image: string;
       types: string;
@@ -60,6 +65,19 @@ export default function DetailsScreen() {
       weight: string;
       stats: string;
     }>();
+
+  const [evolutions, setEvolutions] = useState<EvolutionEntry[]>([]);
+  const [evoLoading, setEvoLoading] = useState(false);
+
+  useEffect(() => {
+    if (!id) return;
+    setEvoLoading(true);
+    pokemonRepository
+      .getEvolutions(Number(id))
+      .then(setEvolutions)
+      .catch(() => setEvolutions([]))
+      .finally(() => setEvoLoading(false));
+  }, [id]);
 
   const typeList = types?.split(",") ?? [];
   const abilityList = abilities?.split(",") ?? [];
@@ -154,6 +172,47 @@ export default function DetailsScreen() {
               ))}
             </View>
           )}
+
+          {/* Évolutions */}
+          <View style={styles.card}>
+            <Text style={styles.sectionTitle}>Évolutions</Text>
+            {evoLoading ? (
+              <ActivityIndicator color={headerColor} />
+            ) : evolutions.length === 0 ? (
+              <Text style={styles.noEvoText}>Aucune évolution</Text>
+            ) : (
+              <View style={styles.evoRow}>
+                {evolutions.map((evo, index) => (
+                  <View key={evo.id} style={styles.evoItem}>
+                    {index > 0 && <Text style={styles.evoArrow}>→</Text>}
+                    <View style={styles.evoCard}>
+                      <View
+                        style={[
+                          styles.evoImageWrapper,
+                          evo.name === name && { borderColor: headerColor, borderWidth: 2 },
+                        ]}
+                      >
+                        <Image
+                          source={{
+                            uri: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${evo.id}.png`,
+                          }}
+                          style={styles.evoImage}
+                        />
+                      </View>
+                      <Text
+                        style={[
+                          styles.evoName,
+                          evo.name === name && { color: headerColor, fontWeight: "700" },
+                        ]}
+                      >
+                        {evo.name.charAt(0).toUpperCase() + evo.name.slice(1)}
+                      </Text>
+                    </View>
+                  </View>
+                ))}
+              </View>
+            )}
+          </View>
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -302,5 +361,50 @@ const styles = StyleSheet.create({
   statBarFill: {
     height: "100%",
     borderRadius: 4,
+  },
+  noEvoText: {
+    color: "#888",
+    fontSize: 13,
+    fontStyle: "italic",
+  },
+  evoRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    flexWrap: "wrap",
+    justifyContent: "center",
+    gap: 4,
+  },
+  evoItem: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 4,
+  },
+  evoCard: {
+    alignItems: "center",
+    gap: 6,
+  },
+  evoArrow: {
+    fontSize: 18,
+    color: "#aaa",
+    marginHorizontal: 4,
+  },
+  evoImageWrapper: {
+    width: 68,
+    height: 68,
+    borderRadius: 34,
+    backgroundColor: "#F0F0F0",
+    alignItems: "center",
+    justifyContent: "center",
+    overflow: "hidden",
+  },
+  evoImage: {
+    width: 56,
+    height: 56,
+  },
+  evoName: {
+    fontSize: 11,
+    color: "#555",
+    textAlign: "center",
+    maxWidth: 72,
   },
 });
