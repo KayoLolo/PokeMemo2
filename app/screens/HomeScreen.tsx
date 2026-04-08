@@ -10,7 +10,7 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { usePokemonList } from "./presentation/hooks/usePokemonList";
+import { useRandomPokemons } from "./presentation/hooks/useRandomPokemons";
 
 const TYPE_COLORS: Record<string, string> = {
   fire: "#F08030",
@@ -34,7 +34,7 @@ const TYPE_COLORS: Record<string, string> = {
 };
 
 export default function HomeScreen() {
-  const { pokemons, loading, error } = usePokemonList();
+  const { pokemons, loading, error } = useRandomPokemons();
   const router = useRouter();
 
   if (loading) {
@@ -96,7 +96,8 @@ export default function HomeScreen() {
                     #{String(pokemon.id).padStart(3, "0")}
                   </Text>
                   <Text style={styles.pokemonName}>
-                    {pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1)}
+                    {pokemon.name.charAt(0).toUpperCase() +
+                      pokemon.name.slice(1)}
                   </Text>
                   <View style={styles.typesRow}>
                     {pokemon.types.map((type: string) => (

@@ -1,6 +1,7 @@
 import { API_CONFIG } from "@/app/core/config/apiConfig";
-import { PokemonApiDataSource, EvolutionEntry } from "./PokemonApiDataSources";
+import { EvolutionEntry } from "./PokemonApiDataSources";
 import { PokemonDto } from "../dtos/PokemonDto";
+import { PokemonApiDataSource } from "./PokemonApiDataSources";
 
 export class PokemonApiDataSourceImpl implements PokemonApiDataSource {
   async getPokemonDetails(id: number): Promise<PokemonDto> {
@@ -11,7 +12,6 @@ export class PokemonApiDataSourceImpl implements PokemonApiDataSource {
     }
 
     const data: PokemonDto = await response.json();
-    console.log("pokemon details name impl:", data.name);
 
     return data;
   }
@@ -24,7 +24,6 @@ export class PokemonApiDataSourceImpl implements PokemonApiDataSource {
     }
 
     const data = await response.json();
-    console.log("data count impl:", data.count);
     return data.count;
   }
 
