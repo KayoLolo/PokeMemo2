@@ -48,7 +48,8 @@ export default function HomeScreen() {
       const trainer = await isAuthenticated();
       setIsLogged(trainer);
     };
-    checkAuth();
+    checkAuth().then(r =>
+    console.log("Vérification auth validée:", r));
   },[]);
 
   const handleLogout = async () => {

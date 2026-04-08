@@ -1,7 +1,6 @@
 import { API_CONFIG } from "@/app/core/config/apiConfig";
-import { EvolutionEntry } from "./PokemonApiDataSources";
 import { PokemonDto } from "../dtos/PokemonDto";
-import { PokemonApiDataSource } from "./PokemonApiDataSources";
+import { PokemonApiDataSource, EvolutionEntry } from "./PokemonApiDataSources";
 
 export class PokemonApiDataSourceImpl implements PokemonApiDataSource {
   async getPokemonDetails(id: number): Promise<PokemonDto> {

@@ -49,7 +49,7 @@ export function usePokemonList(ids: number[]) {
     return () => {
       isMounted = false;
     };
-  }, [idsKey]);
+  }, [ids.length, idsKey]);
 
   return { pokemons, loading, error };
 }

@@ -28,7 +28,7 @@ export default function LoginScreen() {
 
     setLoading(true);
     setError("");
-    const success = await login(trainerName, password);
+    const success = await login(trainerName);
 
     if (success) {
       router.replace("/");
@@ -40,6 +40,15 @@ export default function LoginScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
+      <View style={styles.headerBackButton}>
+        <TouchableOpacity onPress={() => router.back()} activeOpacity={0.7}>
+          <MaterialCommunityIcons
+            name="arrow-left"
+            size={28}
+            color="#E3350D"
+          />
+        </TouchableOpacity>
+      </View>
       <KeyboardAvoidingView behavior="padding" style={styles.keyboardAvoid}>
         <View style={styles.content}>
           {/* Header */}
@@ -134,6 +143,10 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#F5F5F5",
+  },
+  headerBackButton: {
+    paddingHorizontal: 16,
+    paddingVertical: 12,
   },
   keyboardAvoid: {
     flex: 1,

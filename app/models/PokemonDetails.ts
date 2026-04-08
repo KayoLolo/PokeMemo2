@@ -1,7 +1,17 @@
-import PokemonEvolutions from "./PokemonEvolutions";
+import { PokemonEvolutions } from "./PokemonEvolutions";
 
 export class PokemonDetails {
-  constructor(data) {
+  id: number;
+  name: string;
+  imageUrl: string;
+  height: number;
+  weight: number;
+  types: string[];
+  abilities: string[];
+  stats: Record<string, number>;
+  evolutions: PokemonEvolutions[];
+
+  constructor(data: any) {
     const id = data?.id ?? 0;
 
     this.id = id;
@@ -11,21 +21,16 @@ export class PokemonDetails {
       `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${id}.png`;
     this.height = data?.height ?? 0;
     this.weight = data?.weight ?? 0;
-    this.types = data?.types?.map((t) => t.type.name) ?? [];
-    this.abilities = data?.abilities.map((a) => a.ability?.name) ?? [];
+    this.types = data?.types?.map((t: any) => t.type.name) ?? [];
+    this.abilities = data?.abilities.map((a: any) => a.ability?.name) ?? [];
 
     this.stats = {};
-    data?.stats?.forEach((s) => {
+    data?.stats?.forEach((s: any) => {
       if (s?.stat?.name && s?.base_stat != null) {
         this.stats[s.stat.name] = s.base_stat;
       }
     });
 
     this.evolutions = [];
-  }
-
-  async loadEvolutions() {
-    this.evolutions = await PokemonEvolutions(this.id);
-    return this;
   }
 }
