@@ -1,6 +1,9 @@
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
+import { useEffect, useState } from "react";
 import {
   ActivityIndicator,
+  Button,
   Dimensions,
   FlatList,
   Image,
@@ -10,7 +13,9 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { isAuthenticated, logout } from "../core/utils/authService";
 import { useRandomPokemons } from "./presentation/hooks/useRandomPokemons";
+
 
 const TYPE_COLORS: Record<string, string> = {
   fire: "#F08030",
@@ -36,12 +41,27 @@ const TYPE_COLORS: Record<string, string> = {
 export default function HomeScreen() {
   const { pokemons, loading, error } = useRandomPokemons();
   const router = useRouter();
+  const [isLogged, setIsLogged] = useState(false);
+
+  useEffect(() => {
+    const checkAuth = async () => {
+      const trainer = await isAuthenticated();
+      setIsLogged(trainer);
+    };
+    checkAuth();
+  },[]);
+
+  const handleLogout = async () => {
+    await logout();
+    router.replace("/login");
+  };
 
   if (loading) {
     return (
       <View style={styles.centered}>
         <ActivityIndicator size="large" color="#E3350D" />
         <Text style={styles.loadingText}>Chargement des Pokémon...</Text>
+        <Button title="Se déconnecter" onPress={handleLogout} color="#E3350D" />
       </View>
     );
   }
@@ -57,8 +77,29 @@ export default function HomeScreen() {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.headerTitle}>🎮 PokéMemo</Text>
-        <Text style={styles.headerSubtitle}>Choisis ton Pokémon</Text>
+        
+          <Text style={styles.headerSubtitle}>Choisis ton Pokémon</Text>
+        <View style={styles.headerTopRow}>
+          <Text style={styles.headerTitle}>🎮 PokéMemo</Text>
+          <TouchableOpacity
+            onPress={async () => {
+              if (isLogged) {
+                await logout();
+                setIsLogged(false);
+              } else {
+                router.push("/login");
+              }
+            }}
+            style={styles.authButton}
+            activeOpacity={0.7}
+          >
+            <MaterialCommunityIcons
+              name={isLogged ? "logout" : "login"}
+              size={24}
+              color="#fff"
+            />
+          </TouchableOpacity>
+        </View>
       </View>
 
       <FlatList
@@ -235,4 +276,31 @@ const styles = StyleSheet.create({
     height: CARD_HEIGHT * 0.9,
     marginRight: -8,
   },
+  headerTopRow: {
+  flexDirection: "row",
+  justifyContent: "space-between",
+  alignItems: "center",
+},
+
+authButton: {
+  width: 50,
+  height: 50,
+  borderRadius: 25,
+  backgroundColor: "rgba(255,255,255,0.25)",
+  justifyContent: "center",
+  alignItems: "center",
+  shadowColor: "#000",
+  shadowOffset: { width: 0, height: 2 },
+  shadowOpacity: 0.25,
+  shadowRadius: 4,
+  elevation: 4,
+  borderWidth: 2,
+  borderColor: "rgba(255,255,255,0.4)",
+},
+
+authButtonText: {
+  color: "#fff",
+  fontWeight: "600",
+  fontSize: 12,
+},
 });
