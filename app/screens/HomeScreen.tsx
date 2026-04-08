@@ -1,3 +1,4 @@
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 import {
@@ -89,11 +90,15 @@ export default function HomeScreen() {
                 router.push("/login");
               }
             }}
-            style={styles.authButton}>
-            <Text style={styles.authButtonText}>
-              {isLogged ? "Déconnexion" : "Connexion"}
-            </Text>
-            </TouchableOpacity>
+            style={styles.authButton}
+            activeOpacity={0.7}
+          >
+            <MaterialCommunityIcons
+              name={isLogged ? "logout" : "login"}
+              size={24}
+              color="#fff"
+            />
+          </TouchableOpacity>
         </View>
       </View>
 
@@ -278,10 +283,19 @@ const styles = StyleSheet.create({
 },
 
 authButton: {
-  backgroundColor: "rgba(255,255,255,0.2)",
-  paddingHorizontal: 12,
-  paddingVertical: 6,
-  borderRadius: 12,
+  width: 50,
+  height: 50,
+  borderRadius: 25,
+  backgroundColor: "rgba(255,255,255,0.25)",
+  justifyContent: "center",
+  alignItems: "center",
+  shadowColor: "#000",
+  shadowOffset: { width: 0, height: 2 },
+  shadowOpacity: 0.25,
+  shadowRadius: 4,
+  elevation: 4,
+  borderWidth: 2,
+  borderColor: "rgba(255,255,255,0.4)",
 },
 
 authButtonText: {
